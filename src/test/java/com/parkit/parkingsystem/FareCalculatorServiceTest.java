@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Date;
+import java.util.Random;
 
 public class FareCalculatorServiceTest {
 
@@ -123,5 +124,22 @@ public class FareCalculatorServiceTest {
         fareCalculatorService.calculateFare(ticket);
         assertEquals( (24 * Fare.CAR_RATE_PER_HOUR) , ticket.getPrice());
     }
+    @Test
+    public void freeParkingForLessThanHalfAHourParkingTime() {
+        // Generate random number between 0 and 30
+        int min= 0, max = 30;
+        int minutes = new Random().nextInt(max - min + 1) + min;
 
+        Date inTime = new Date();
+        // Under-30 minutes parking time should be free
+        inTime.setTime(System.currentTimeMillis() - (minutes * 60 * 1000));
+        Date outTime = new Date();
+        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR,false);
+
+        ticket.setInTime(inTime);
+        ticket.setOutTime(outTime);
+        ticket.setParkingSpot(parkingSpot);
+        fareCalculatorService.calculateFare(ticket);
+        assertEquals(ticket.getPrice(), 0);
+    }
 }
