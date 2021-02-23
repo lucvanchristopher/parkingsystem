@@ -10,7 +10,14 @@ public class FareCalculatorService {
             throw new IllegalArgumentException("Out time provided is incorrect:" + ticket.getOutTime().toString());
         }
         double duration = (double) (ticket.getOutTime().getTime() - ticket.getInTime().getTime()) / (1000 * 60);// in minutes
-        // in hours
+
+        // Under-30mn should be free
+        if (duration <= 30) {
+            ticket.setPrice(0);
+            return;
+        }
+
+        // Hourly rate
         if (duration < 60) {
             duration = duration / 60.0;
         } else {
