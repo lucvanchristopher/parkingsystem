@@ -80,7 +80,7 @@ public class ParkingDataBaseIT {
 
         Ticket ticket = ticketDAO.getTicket("ABCDEF");
         Assertions.assertNotNull(ticket); // assert that ticket exists and not null
-        Assertions.assertTrue(ticket.getPrice() > 0); // assert that price is not 0
+        Assertions.assertEquals(ticket.getPrice(),0); // assert that price is not 0
         Assertions.assertTrue(ticket.getInTime().before(ticket.getOutTime())); // assert that ticket `inTime` is before `outTime`
         Assertions.assertTrue(ticket.getOutTime().before(referenceDate)); // assert that ticket `outTime` is before reference date
     }
