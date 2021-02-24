@@ -28,7 +28,7 @@ public class ParkingDataBaseIT {
     private static InputReaderUtil inputReaderUtil;
 
     @BeforeAll
-    private static void setUp() throws Exception{
+    private static void setUp() throws Exception {
         parkingSpotDAO = new ParkingSpotDAO();
         parkingSpotDAO.dataBaseConfig = dataBaseTestConfig;
         ticketDAO = new TicketDAO();
@@ -44,7 +44,7 @@ public class ParkingDataBaseIT {
     }
 
     @AfterAll
-    private static void tearDown(){
+    private static void tearDown() {
 
     }
 
@@ -56,13 +56,12 @@ public class ParkingDataBaseIT {
 
         Date referenceDate = new Date();
         referenceDate.setTime(referenceDate.getTime() + 1000); // now plus 1 second
-
         Ticket ticket = ticketDAO.getTicket("ABCDEF");
-        Assertions.assertNotNull(ticket); // assert that ticket exists and not null
-        Assertions.assertFalse(ticket.getParkingSpot().isAvailable());// assert that parking spot related to this ticket should be occupied
+        Assertions.assertNotNull(ticket);// assert that ticket exists and not null
+        Assertions.assertFalse(ticket.getParkingSpot().isAvailable()); // assert that parking spot related to this ticket shold be occupied
         Assertions.assertTrue(ticket.getInTime().before(referenceDate));// assert that ticket `inTime` is before reference date
-        Assertions.assertEquals(ticket.getPrice(),0);//assert that ticket price is 0
-        Assertions.assertEquals(ticket.getOutTime(), null);// assert that the vehicle hasn't yet exited the parking
+        Assertions.assertEquals(ticket.getPrice(), 0); // assert that ticket price is 0
+        Assertions.assertEquals(ticket.getOutTime(), null);// assert that ticket price is 0
     }
 
     @Test
@@ -70,19 +69,17 @@ public class ParkingDataBaseIT {
         testParkingACar();
 
         Thread.sleep(1000L);// wait for 1 second
-
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
         parkingService.processExitingVehicle();
         //TODO: check that the fare generated and out time are populated correctly in the database
 
         Date referenceDate = new Date();
-        referenceDate.setTime(referenceDate.getTime() + 1000); // now plus 1 second
-
+        referenceDate.setTime(referenceDate.getTime() + 1000);// now plus 1 second
         Ticket ticket = ticketDAO.getTicket("ABCDEF");
-        Assertions.assertNotNull(ticket); // assert that ticket exists and not null
-        Assertions.assertTrue(ticket.getPrice() > 0); // assert that price is not 0
-        Assertions.assertTrue(ticket.getInTime().before(ticket.getOutTime())); // assert that ticket `inTime` is before `outTime`
-        Assertions.assertTrue(ticket.getOutTime().before(referenceDate)); // assert that ticket `outTime` is before reference date
+        Assertions.assertNotNull(ticket);
+        Assertions.assertTrue(ticket.getPrice() > 0);
+        Assertions.assertTrue(ticket.getInTime().before(ticket.getOutTime()));
+        Assertions.assertTrue(ticket.getOutTime().before(referenceDate));
     }
 
 }
