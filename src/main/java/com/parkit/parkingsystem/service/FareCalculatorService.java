@@ -11,7 +11,7 @@ public class FareCalculatorService {
         }
         double duration = (double) (ticket.getOutTime().getTime() - ticket.getInTime().getTime()) / (1000 * 60);// in minutes
 
-        // Under-30mn should be free
+        // Under-30mn should be free (other criterion of fare)
         if (duration <= 30) {
             ticket.setPrice(0);
             return;
