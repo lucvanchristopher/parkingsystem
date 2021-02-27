@@ -131,8 +131,7 @@ public class ParkingDataBaseIT {
         Assertions.assertNotNull(ticket);// assert that ticket exists and not null
         Assertions.assertEquals(ticket.getPrice(),
                 2 * Fare.CAR_RATE_PER_HOUR * (1 - Fare.RECURRING_DISCOUNT_RATE)); // assert price to have a discount
-        Assertions.assertEquals(ticket.getOutTime().getTime() - ticket.getInTime().getTime(),
-                2 * 60 * 60 * 1000); // assert the time spent in parking is 2hours
+
     }
 
 }
