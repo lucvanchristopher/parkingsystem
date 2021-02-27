@@ -110,10 +110,15 @@ public class ParkingService {
     public void processExitingVehicle() {
         try{
             String vehicleRegNumber = getVehichleRegNumber();
+
+            // Get vehicle loyalty
+            long c = ticketDAO.getTicketsCount(vehicleRegNumber);
+            double discount = (c >= Fare.RECURRING_COUNT) ? Fare.RECURRING_DISCOUNT_RATE : 0;
+
             Ticket ticket = ticketDAO.getTicket(vehicleRegNumber);
             Date outTime = currentDate();
             ticket.setOutTime(outTime);
-            fareCalculatorService.calculateFare(ticket);
+            fareCalculatorService.calculateFare(ticket, discount);
             if(ticketDAO.updateTicket(ticket)) {
                 ParkingSpot parkingSpot = ticket.getParkingSpot();
                 parkingSpot.setAvailable(true);
