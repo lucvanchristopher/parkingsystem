@@ -104,7 +104,7 @@ public class ParkingDataBaseIT {
 
             Date outTime = new Date();
             outTime.setTime(inTime.getTime() + (30 * 60 * 1000));// outTime is 30mn after `inTime`
-            ticket.setInTime(new Date());
+            ticket.setOutTime(outTime);
 
             ticket.setPrice(0);
 
