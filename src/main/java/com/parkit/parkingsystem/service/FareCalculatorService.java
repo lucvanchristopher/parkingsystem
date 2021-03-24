@@ -3,6 +3,8 @@ package com.parkit.parkingsystem.service;
 import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.model.Ticket;
 
+import java.time.Duration;
+
 public class FareCalculatorService {
 
     /**
@@ -15,10 +17,10 @@ public class FareCalculatorService {
         if (discount > 1 || discount < 0) {
             throw new IllegalArgumentException("Invalid discount rate");
         }
-        if ((ticket.getOutTime() == null) || (ticket.getOutTime().before(ticket.getInTime()))) {
+        if ((ticket.getOutTime() == null) || (ticket.getOutTime().isBefore(ticket.getInTime()))) {
             throw new IllegalArgumentException("Out time provided is incorrect:" + ticket.getOutTime().toString());
         }
-        double duration = (double) (ticket.getOutTime().getTime() - ticket.getInTime().getTime()) / (1000 * 60);// in minutes
+        double duration = Duration.between(ticket.getInTime(), ticket.getOutTime()).toMinutes();// in minutes
 
         // Under-30mn should be free (other criterion of fare)
         if (duration <= 30) {

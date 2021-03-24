@@ -10,17 +10,17 @@ import com.parkit.parkingsystem.util.InputReaderUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class ParkingService {
 
     private static final Logger logger = LogManager.getLogger("ParkingService");
 
-    private static FareCalculatorService fareCalculatorService = new FareCalculatorService();
+    private static final FareCalculatorService fareCalculatorService = new FareCalculatorService();
 
-    private InputReaderUtil inputReaderUtil;
-    private ParkingSpotDAO parkingSpotDAO;
-    private  TicketDAO ticketDAO;
+    private final InputReaderUtil inputReaderUtil;
+    private final ParkingSpotDAO parkingSpotDAO;
+    private final TicketDAO ticketDAO;
 
     public ParkingService(InputReaderUtil inputReaderUtil, ParkingSpotDAO parkingSpotDAO, TicketDAO ticketDAO){
         this.inputReaderUtil = inputReaderUtil;
@@ -36,7 +36,7 @@ public class ParkingService {
                 parkingSpot.setAvailable(false);
                 parkingSpotDAO.updateParking(parkingSpot);//allot this parking space and mark it's availability as false
 
-                Date inTime=this.currentDate() ;
+                LocalDateTime inTime = this.currentDate();
                 Ticket ticket = new Ticket();
                 //ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
                 //ticket.setId(ticketID);
@@ -116,7 +116,7 @@ public class ParkingService {
             double discount = (c >= Fare.RECURRING_COUNT) ? Fare.RECURRING_DISCOUNT_RATE : 0;
 
             Ticket ticket = ticketDAO.getTicket(vehicleRegNumber);
-            Date outTime = currentDate();
+            LocalDateTime outTime = currentDate();
             ticket.setOutTime(outTime);
             fareCalculatorService.calculateFare(ticket, discount);
             if(ticketDAO.updateTicket(ticket)) {
@@ -132,7 +132,6 @@ public class ParkingService {
             logger.error("Unable to process exiting vehicle",e);
         }
     }
-    public Date currentDate() {
-        return new Date();
-    }
-}
+    public LocalDateTime currentDate() {
+        return LocalDateTime.now();
+}}

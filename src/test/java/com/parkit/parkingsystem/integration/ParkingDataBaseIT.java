@@ -15,7 +15,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
@@ -59,12 +60,11 @@ public class ParkingDataBaseIT {
         parkingService.processIncomingVehicle();
         //TODO: check that a ticket is actualy saved in DB and Parking table is updated with availability
 
-        Date referenceDate = new Date();
-        referenceDate.setTime(referenceDate.getTime() + 1000); // now plus 1 second
+        LocalDateTime referenceDate = LocalDateTime.now().plus(1, ChronoUnit.SECONDS);// now plus 1 second
         Ticket ticket = ticketDAO.getTicket("ABCDEF");
         Assertions.assertNotNull(ticket);// assert that ticket exists and not null
         Assertions.assertFalse(ticket.getParkingSpot().isAvailable()); // assert that parking spot related to this ticket shold be occupied
-        Assertions.assertTrue(ticket.getInTime().before(referenceDate));// assert that ticket `inTime` is before reference date
+        Assertions.assertTrue(ticket.getInTime().isBefore(referenceDate));// assert that ticket `inTime` is before reference date
         Assertions.assertEquals(ticket.getPrice(), 0); // assert that ticket price is 0
         Assertions.assertEquals(ticket.getOutTime(), null);// assert that ticket price is 0
     }
@@ -78,14 +78,13 @@ public class ParkingDataBaseIT {
         parkingService.processExitingVehicle();
         //TODO: check that the fare generated and out time are populated correctly in the database
 
-        Date referenceDate = new Date();
-        referenceDate.setTime(referenceDate.getTime() + 1000);// now plus 1 second
+        LocalDateTime referenceDate = LocalDateTime.now().plus(1, ChronoUnit.SECONDS);// now plus 1 second
 
         Ticket ticket = ticketDAO.getTicket("ABCDEF");
         Assertions.assertNotNull(ticket);// assert that ticket exists and not null
         Assertions.assertEquals(ticket.getPrice(), 0);// assert that price is 0 (under 30mn case)
-        Assertions.assertTrue(ticket.getInTime().before(ticket.getOutTime()));// assert that ticket `inTime` is before `outTime`
-        Assertions.assertTrue(ticket.getOutTime().before(referenceDate));// assert that ticket `outTime` is before reference date
+        Assertions.assertTrue(ticket.getInTime().isBefore(ticket.getOutTime()));// assert that ticket `inTime` is before `outTime`
+        Assertions.assertTrue(ticket.getOutTime().isBefore(referenceDate));// assert that ticket `outTime` is before reference date
     }
 
     @Test
@@ -98,12 +97,10 @@ public class ParkingDataBaseIT {
             Ticket ticket = new Ticket();
             ticket.setParkingSpot(parkingSpot);
 
-            Date inTime = new Date();
-            inTime.setTime(System.currentTimeMillis() - ((count - i) * 60 * 1000));
+            LocalDateTime inTime = LocalDateTime.now().minus(count - i, ChronoUnit.MINUTES);
             ticket.setInTime(inTime);
 
-            Date outTime = new Date();
-            outTime.setTime(inTime.getTime() + (30 * 60 * 1000));// outTime is 30mn after `inTime`
+            LocalDateTime outTime = inTime.minus(30, ChronoUnit.MINUTES);// outTime is 30mn after `inTime`
             ticket.setOutTime(outTime);
 
             ticket.setPrice(0);
@@ -115,7 +112,7 @@ public class ParkingDataBaseIT {
         }
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
         ParkingService parkingServiceSpy = spy(parkingService);
-        Date referenceDate = new Date();
+        LocalDateTime referenceDate = LocalDateTime.now();
         //fake an inTime current date
         when(parkingServiceSpy.currentDate()).thenReturn(referenceDate);
 
@@ -123,7 +120,7 @@ public class ParkingDataBaseIT {
         parkingServiceSpy.processIncomingVehicle();
 
         //fake an outTime of inTime + 2 hours
-        referenceDate.setTime(referenceDate.getTime() + (2 * 60 * 60 * 1000));
+        referenceDate = referenceDate.plus(2, ChronoUnit.HOURS);
         when(parkingServiceSpy.currentDate()).thenReturn(referenceDate);
         parkingServiceSpy.processExitingVehicle();
 
