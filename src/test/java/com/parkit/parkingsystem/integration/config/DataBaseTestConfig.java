@@ -5,16 +5,17 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
+import java.util.ResourceBundle;
 
 public class DataBaseTestConfig extends DataBaseConfig {
 
     private static final Logger logger = LogManager.getLogger("DataBaseTestConfig");
 
     public Connection getConnection() throws ClassNotFoundException, SQLException {
+        ResourceBundle bundle = ResourceBundle.getBundle("app");
         logger.info("Create DB connection");
         Class.forName("com.mysql.cj.jdbc.Driver");
-        return DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/test?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC","root","rootroot");
+        return DriverManager.getConnection(bundle.getString("database.url"));
     }
 
     public void closeConnection(Connection con){

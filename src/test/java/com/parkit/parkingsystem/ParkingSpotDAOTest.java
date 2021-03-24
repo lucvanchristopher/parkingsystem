@@ -4,6 +4,7 @@ import com.parkit.parkingsystem.config.DataBaseConfig;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.model.ParkingSpot;
+import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,7 @@ import java.sql.Statement;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ParkingSpotDAOTest {
-    private static final DataBaseConfig  dataBaseTestConfig = new DataBaseConfig();
+    private static final DataBaseConfig  dataBaseTestConfig = new DataBaseTestConfig();
 
     @BeforeAll
     private static void setUp() throws Exception {

@@ -3,6 +3,7 @@ package com.parkit.parkingsystem;
 import com.parkit.parkingsystem.config.DataBaseConfig;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.TicketDAO;
+import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import org.junit.jupiter.api.BeforeAll;
@@ -18,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TicketDAOTest {
-    private static final DataBaseConfig dataBaseTestConfig = new DataBaseConfig();
+    private static final DataBaseConfig dataBaseTestConfig = new DataBaseTestConfig();
     private static final String vehicleRegistrationNumber = "ABCD";
     private static final TicketDAO ticketDAO = new TicketDAO();
 
