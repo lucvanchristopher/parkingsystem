@@ -82,14 +82,13 @@ public class TicketDAO {
             ps.setDouble(1, ticket.getPrice());
             ps.setTimestamp(2, Timestamp.valueOf(ticket.getOutTime()));
             ps.setInt(3,ticket.getId());
-            ps.execute();
-            return true;
+            return ps.executeUpdate() > 0;
         }catch (Exception ex){
             logger.error("Error saving ticket info",ex);
+            return false;
         }finally {
             dataBaseConfig.closeConnection(con);
         }
-        return false;
     }
 
     public long getTicketsCount(String vehicleRegNumber) {
