@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class InputReaderUtil {
 
-    private final Scanner scan = new Scanner(System.in);
+    private final Scanner scan = new Scanner(System.in, "UTF-8");
     private final Logger logger = LogManager.getLogger("InputReaderUtil");
 
     public int readSelection() {
